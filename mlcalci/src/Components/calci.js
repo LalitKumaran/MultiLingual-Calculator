@@ -40,10 +40,19 @@ export default class Calci extends Component {
         })
     } 
 
+    handleDelete = () => {
+      var d = this.state.display
+      this.setState ({
+          display: d.slice(0,d.length-1),
+      })
+  } 
+//mdnawfalag001@
     handletranslate = (e) => {
         this.setState({
-            toLang: e.target.value
+            toLang: e.target.value,
         })
+        
+        if (this.state.englishText!=="") {this.setState({translatedText: <>Please wait...&#129300;</> })} 
 
         var sign = Math.floor(eval(this.state.display)) < 0 ? 'n' : 'p'
         var englishText = this.state.englishText
@@ -135,6 +144,8 @@ export default class Calci extends Component {
             display : Math.floor(eval(replaceToOperator)),
 
             englishText : Math.floor(eval(replaceToOperator))>=0 ? s1 : "-" + s1,
+
+            translatedText: <>Please wait...&#129300;</>
           });
 
         } 
@@ -144,13 +155,14 @@ export default class Calci extends Component {
 
           var s2 =  eval(replaceToOperator) === Infinity ? "zero" : this.toeng(Math.abs(Math.floor(eval(replaceToOperator))))
 
-          var p = ""
+          var p = <>Please wait...&#129300;</>
 
           var sign = Math.floor(eval(replaceToOperator)) < 0 ? 'n' : 'p'
           
           eval(replaceToOperator) === Infinity ? p = this.toother("zero",this.state.toLang) : this.toother(s2,this.state.toLang,sign)
 
           this.setState({
+
             display : eval(replaceToOperator) === Infinity ? 0 : Math.floor(eval(replaceToOperator)) ,
             
             englishText : Math.floor(eval(replaceToOperator))>=0 ? s2 : "-" + s2,
@@ -169,6 +181,7 @@ export default class Calci extends Component {
           this.setState({
             display : Math.floor(eval(this.state.display)),
             englishText : Math.floor(eval(this.state.display))>=0 ? s : "-" + s,
+            translatedText: <>Please wait...&#129300;</>
           });
         }
     }
@@ -248,8 +261,8 @@ export default class Calci extends Component {
 
             <Button onClick={this.handleDisplay}>/</Button>
 
+            <Button onClick={this.handleDelete} clear>DEL</Button>
             <Button onClick={this.handleDisplay}>0</Button>
-            <Button onClick={this.handleDisplay}>.</Button>
             <Button onClick={this.handleCalculate} eval>
               =
             </Button>
@@ -302,7 +315,9 @@ const TranslateSection = styled.div`
   border-radius: 3px;
   box-shadow: 0px 4px #009de4, 0px 10px 15px rgba(0, 0, 0, 0.2);
 `;
+
 const Container = styled.div`
+  // margin-top: 40px;
   float: right;
   width: 500px;
   height: 80vh;
